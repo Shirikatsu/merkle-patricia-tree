@@ -88,10 +88,12 @@ Trie.prototype.get = function (key, cb) {
 Trie.prototype.put = function (key, value, cb) {
   var self = this
 
+  console.log("Attempting put...")
   key = ethUtil.toBuffer(key)
   value = ethUtil.toBuffer(value)
 
   if (!value || value.toString() === '') {
+    console.log("VALUE IS NONE");
     self.del(key, cb)
   } else {
     cb = callTogether(cb, self.sem.leave)
@@ -101,6 +103,7 @@ Trie.prototype.put = function (key, value, cb) {
         // first try to find the give key or its nearst node
         self.findPath(key, function (err, foundValue, keyRemainder, stack) {
           if (err) {
+            console.log("ERROR IN PATH FINDING")
             return cb(err)
           }
           // then update
@@ -356,6 +359,7 @@ Trie.prototype._findDbNodes = function (onFound, cb) {
  * @param {Function} cb - the callback
  */
 Trie.prototype._updateNode = function (key, value, keyRemainder, stack, cb) {
+  console.log("Update NODE")
   var toSave = []
   var lastNode = stack.pop()
 
