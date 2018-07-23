@@ -96,12 +96,16 @@ Trie.prototype.put = function (key, value, cb) {
     console.log("VALUE IS NONE");
     self.del(key, cb)
   } else {
+    console.log("VALUE IS NOT NONE")
     cb = callTogether(cb, self.sem.leave)
 
     self.sem.take(function () {
+      console.log("SEMAPHORE TAKE EXECUTED")
       if (self.root.toString('hex') !== ethUtil.SHA3_RLP.toString('hex')) {
+        console.log("ROOT HEX DOES NOT EQUAL HASHED RLP")
         // first try to find the give key or its nearst node
         self.findPath(key, function (err, foundValue, keyRemainder, stack) {
+          console.log("FINDING PATH")
           if (err) {
             console.log("ERROR IN PATH FINDING")
             return cb(err)
@@ -110,6 +114,7 @@ Trie.prototype.put = function (key, value, cb) {
           self._updateNode(key, value, keyRemainder, stack, cb)
         })
       } else {
+        console.log("CREATING INITIAL NODE")
         self._createInitialNode(key, value, cb) // if no root initialize this trie
       }
     })
